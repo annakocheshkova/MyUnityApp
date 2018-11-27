@@ -35,7 +35,7 @@ steps:
   displayName: 'Build Puppet Apps'
   inputs:
     scriptName: ./scripts/build.ps1
-    args: '-Target="BuildPuppetApps" -NuGetPassword="$(NUGET_PASSWORD)" -NuGetFeedId="$(NUGET_FEED_ID)" -Verbosity="Diagnostic"'
+    args: '-Target="BuildApp" -NuGetPassword="$(NUGET_PASSWORD)" -NuGetFeedId="$(NUGET_FEED_ID)" -Verbosity="Diagnostic"'
 
 - task: PowerShell@1
   displayName: 'Unregister Unity'
