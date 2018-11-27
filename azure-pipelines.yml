@@ -15,7 +15,7 @@ steps:
   displayName: 'Activate Unity'
   inputs:
     scriptName: ./scripts/build.ps1
-  arguments: '-Target="RegisterUnity" -UnitySerialNumber="$(UNITY_SERIAL_NUMBER_WINDOWS)" -UnityUsername="$(UNITY_USERNAME)" -UnityPassword="$(UNITY_PASSWORD)" -Verbosity="Diagnostic"'
+  args: '-Target="RegisterUnity" -UnitySerialNumber="$(UNITY_SERIAL_NUMBER_WINDOWS)" -UnityUsername="$(UNITY_USERNAME)" -UnityPassword="$(UNITY_PASSWORD)" -Verbosity="Diagnostic"'
 
 
 - script: |
@@ -29,19 +29,18 @@ steps:
   displayName: 'Download Android NDK'
   inputs:
     scriptName:  ./scripts/build.ps1
-  arguments: '-Target="DownloadNdk" -NdkUrl="$(ANDROID_NDK_URL)" -Verbosity="Diagnostic"'
+  args: '-Target="DownloadNdk" -NdkUrl="$(ANDROID_NDK_URL)" -Verbosity="Diagnostic"'
 
 - task: PowerShell@1
   displayName: 'Build Puppet Apps'
   inputs:
     scriptName: ./scripts/build.ps1
-
-    arguments: '-Target="BuildPuppetApps" -NuGetPassword="$(NUGET_PASSWORD)" -NuGetFeedId="$(NUGET_FEED_ID)" -Verbosity="Diagnostic"'
+  args: '-Target="BuildPuppetApps" -NuGetPassword="$(NUGET_PASSWORD)" -NuGetFeedId="$(NUGET_FEED_ID)" -Verbosity="Diagnostic"'
 
 - task: PowerShell@1
   displayName: 'Unregister Unity'
   inputs:
     scriptName: ./scripts/build.ps1
-  arguments: '-Target="UnregisterUnity" -Verbosity="Diagnostic"'
+  args: '-Target="UnregisterUnity" -Verbosity="Diagnostic"'
   condition: always()
 
