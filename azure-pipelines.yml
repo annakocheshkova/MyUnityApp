@@ -5,15 +5,18 @@
 #Your build pipeline references an undefined variable named ‘NUGET_PASSWORD’. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab. See https://go.microsoft.com/fwlink/?linkid=865972
 #Your build pipeline references an undefined variable named ‘NUGET_FEED_ID’. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab. See https://go.microsoft.com/fwlink/?linkid=865972
 steps:
-- powershell: ./scripts/build.ps1
+- task: PowerShell@1
+  displayName: 'Install Unity'
+  inputs:
+    scriptName: ./scripts/build.ps1
   args: '-Target="Install-Unity-Windows" -Verbosity="Diagnostic"'
 
-  displayName: 'Install Unity'
-
-- powershell: ./scripts/build.ps1
-  args: '-Target="RegisterUnity" -UnitySerialNumber="$(UNITY_SERIAL_NUMBER_WINDOWS)" -UnityUsername="$(UNITY_USERNAME)" -UnityPassword="$(UNITY_PASSWORD)" -Verbosity="Diagnostic"'
-
+- task: PowerShell@1
   displayName: 'Activate Unity'
+  inputs:
+    scriptName: ./scripts/build.ps1
+  arguments: '-Target="RegisterUnity" -UnitySerialNumber="$(UNITY_SERIAL_NUMBER_WINDOWS)" -UnityUsername="$(UNITY_USERNAME)" -UnityPassword="$(UNITY_PASSWORD)" -Verbosity="Diagnostic"'
+
 
 - script: |
    echo After activating unity, some important .meta files are deleted, so they must be un-deleted
@@ -22,22 +25,23 @@ steps:
    git stash
   displayName: 'git stash'
 
-- powershell: ./scripts/build.ps1
-  args: '-Target="DownloadNdk" -NdkUrl="$(ANDROID_NDK_URL)" -Verbosity="Diagnostic"'
-
+- task: PowerShell@1
   displayName: 'Download Android NDK'
+  inputs:
+    scriptName:  ./scripts/build.ps1
+  arguments: '-Target="DownloadNdk" -NdkUrl="$(ANDROID_NDK_URL)" -Verbosity="Diagnostic"'
 
 - task: PowerShell@1
   displayName: 'Build Puppet Apps'
   inputs:
     scriptName: ./scripts/build.ps1
 
-    args: '-Target="BuildPuppetApps" -NuGetPassword="$(NUGET_PASSWORD)" -NuGetFeedId="$(NUGET_FEED_ID)" -Verbosity="Diagnostic"'
+    arguments: '-Target="BuildPuppetApps" -NuGetPassword="$(NUGET_PASSWORD)" -NuGetFeedId="$(NUGET_FEED_ID)" -Verbosity="Diagnostic"'
 
-
-- powershell: ./scripts/build.ps1
-  args: '-Target="UnregisterUnity" -Verbosity="Diagnostic"'
-
+- task: PowerShell@1
   displayName: 'Unregister Unity'
+  inputs:
+    scriptName: ./scripts/build.ps1
+  arguments: '-Target="UnregisterUnity" -Verbosity="Diagnostic"'=
   condition: always()
 
