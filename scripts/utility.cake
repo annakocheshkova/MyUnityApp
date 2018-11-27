@@ -13,7 +13,7 @@ public class Statics
 // Can't reference Context within the class, so set value outside
 Statics.Context = Context;
 
-static int ExecuteUnityCommand(string extraArgs, string projectPath = ".")
+static int ExecuteUnityCommand(string extraArgs, string projectPath = "..")
 {
     var projectDir = projectPath == null ? null : Statics.Context.MakeAbsolute(Statics.Context.Directory(projectPath));
     var unityPath = Statics.Context.EnvironmentVariable("UNITY_PATH");
@@ -89,7 +89,7 @@ static string GetBuildFolder(string appType, string projectPath)
      return projectPath + "/" + Statics.TemporaryPrefix + appType + "Builds";
 }
 
-static void ExecuteUnityMethod(string buildMethodName, string buildTarget = null, string projectPath = ".")
+static void ExecuteUnityMethod(string buildMethodName, string buildTarget = null, string projectPath = "..")
 {
     Statics.Context.Information("Executing method " + buildMethodName + ", this could take a while...");
     var command = "-executeMethod " + buildMethodName;
