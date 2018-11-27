@@ -13,7 +13,7 @@ steps:
 - task: ShellScript@2
   displayName: 'Activate Unity'
   inputs:
-    scriptPath: ./build.sh
+    scriptPath: ./scripts/build.sh
 
     args: '-target=RegisterUnity -UnitySerialNumber="$(UNITY_SERIAL_NUMBER_MACOS)" -UnityUsername="$(UNITY_USERNAME)" -UnityPassword="$(UNITY_PASSWORD)" -Verbosity="Diagnostic"'
 
@@ -28,7 +28,7 @@ steps:
 - task: ShellScript@2
   displayName: 'Download Android NDK'
   inputs:
-    scriptPath: ./build.sh
+    scriptPath: ./scripts/build.sh
 
     args: '-target=DownloadNdk -NdkUrl="$(ANDROID_NDK_URL)" -Verbosity="Diagnostic"'
 
@@ -36,7 +36,7 @@ steps:
 - task: ShellScript@2
   displayName: 'Run Cake Target "BuildPuppetApps"'
   inputs:
-    scriptPath: ./build.sh
+    scriptPath: ./scripts/build.sh
 
     args: '-target=BuildApp -UnityAppName="Puppet" -NuGetPassword="$(NUGET_PASSWORD)" -NuGetFeedId="$(NUGET_FEED_ID)" -Verbosity="Diagnostic"'
 
@@ -44,17 +44,8 @@ steps:
 - task: ShellScript@2
   displayName: 'Unregister Unity'
   inputs:
-    scriptPath: ./build.sh
+    scriptPath: ./scripts/build.sh
 
     args: '-target=UnregisterUnity -Verbosity="Diagnostic"'
 
   condition: always()
-
-
-
-
-
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
