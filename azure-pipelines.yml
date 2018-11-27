@@ -29,6 +29,11 @@ steps:
     scriptPath: ./scripts/build.sh
     args: '-target=BuildApp -Verbosity="Diagnostic"'
 
+- task: PublishPipelineArtifact@0
+  inputs:
+    artifactName: 'MyArtifact'
+    targetPath: './CAKE_SCRIPT_TEMP$(UNITY_APP_NAME)Builds/AndroidIL2CPPBuild.apk'
+
 - task: ShellScript@2
   displayName: 'Unregister Unity'
   inputs:
