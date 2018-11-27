@@ -27,7 +27,7 @@ steps:
   displayName: 'Run Cake Target "BuildApp"'
   inputs:
     scriptPath: ./scripts/build.sh
-    args: '-target=BuildApps -Verbosity="Diagnostic"'
+    args: '-target=BuildApp -Verbosity="Diagnostic"'
 
 
 - task: ShellScript@2
