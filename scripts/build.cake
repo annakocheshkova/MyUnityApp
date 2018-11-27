@@ -495,7 +495,7 @@ void GetUwpPackage (AppCenterModule module, bool usePublicFeed) {
 }
 
 
-void BuildApps(string type = "", string projectPath = "../")
+void BuildApps(string type = "", string projectPath = "..")
 {
   //  if (type == "") 
   //  {
