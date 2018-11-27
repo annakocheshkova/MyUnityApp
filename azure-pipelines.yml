@@ -6,12 +6,12 @@
 #Your build pipeline references an undefined variable named ‘NUGET_FEED_ID’. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab. See https://go.microsoft.com/fwlink/?linkid=865972
 steps:
 - powershell: ./scripts/build.ps1
-  arguments: '-Target="Install-Unity-Windows" -Verbosity="Diagnostic"'
+  args: '-Target="Install-Unity-Windows" -Verbosity="Diagnostic"'
 
   displayName: 'Install Unity'
 
 - powershell: ./scripts/build.ps1
-  arguments: '-Target="RegisterUnity" -UnitySerialNumber="$(UNITY_SERIAL_NUMBER_WINDOWS)" -UnityUsername="$(UNITY_USERNAME)" -UnityPassword="$(UNITY_PASSWORD)" -Verbosity="Diagnostic"'
+  args: '-Target="RegisterUnity" -UnitySerialNumber="$(UNITY_SERIAL_NUMBER_WINDOWS)" -UnityUsername="$(UNITY_USERNAME)" -UnityPassword="$(UNITY_PASSWORD)" -Verbosity="Diagnostic"'
 
   displayName: 'Activate Unity'
 
@@ -23,7 +23,7 @@ steps:
   displayName: 'git stash'
 
 - powershell: ./scripts/build.ps1
-  arguments: '-Target="DownloadNdk" -NdkUrl="$(ANDROID_NDK_URL)" -Verbosity="Diagnostic"'
+  args: '-Target="DownloadNdk" -NdkUrl="$(ANDROID_NDK_URL)" -Verbosity="Diagnostic"'
 
   displayName: 'Download Android NDK'
 
@@ -32,11 +32,11 @@ steps:
   inputs:
     scriptName: ./scripts/build.ps1
 
-    arguments: '-Target="BuildPuppetApps" -NuGetPassword="$(NUGET_PASSWORD)" -NuGetFeedId="$(NUGET_FEED_ID)" -Verbosity="Diagnostic"'
+    args: '-Target="BuildPuppetApps" -NuGetPassword="$(NUGET_PASSWORD)" -NuGetFeedId="$(NUGET_FEED_ID)" -Verbosity="Diagnostic"'
 
 
 - powershell: ./scripts/build.ps1
-  arguments: '-Target="UnregisterUnity" -Verbosity="Diagnostic"'
+  args: '-Target="UnregisterUnity" -Verbosity="Diagnostic"'
 
   displayName: 'Unregister Unity'
   condition: always()
