@@ -1,51 +1,45 @@
-# Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
-  
+queue:
+  name: Hosted VS2017
+#Your build pipeline references an undefined variable named ‘UNITY_SERIAL_NUMBER_WINDOWS’. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab. See https://go.microsoft.com/fwlink/?linkid=865972
+#Your build pipeline references an undefined variable named ‘UNITY_USERNAME’. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab. See https://go.microsoft.com/fwlink/?linkid=865972
+#Your build pipeline references an undefined variable named ‘UNITY_PASSWORD’. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab. See https://go.microsoft.com/fwlink/?linkid=865972
+#Your build pipeline references an undefined variable named ‘ANDROID_NDK_URL’. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab. See https://go.microsoft.com/fwlink/?linkid=865972
+#Your build pipeline references an undefined variable named ‘NUGET_PASSWORD’. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab. See https://go.microsoft.com/fwlink/?linkid=865972
+#Your build pipeline references an undefined variable named ‘NUGET_FEED_ID’. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab. See https://go.microsoft.com/fwlink/?linkid=865972
 steps:
-- task: ShellScript@2
+- powershell: ./scripts/build.ps1
+  arguments: '-Target="Install-Unity-Windows" -Verbosity="Diagnostic"'
+
   displayName: 'Install Unity'
-  inputs:
-    scriptPath: 'scripts/install-unity.sh'
 
+- powershell: ./scripts/build.ps1
+  arguments: '-Target="RegisterUnity" -UnitySerialNumber="$(UNITY_SERIAL_NUMBER_WINDOWS)" -UnityUsername="$(UNITY_USERNAME)" -UnityPassword="$(UNITY_PASSWORD)" -Verbosity="Diagnostic"'
 
-- task: ShellScript@2
   displayName: 'Activate Unity'
-  inputs:
-    scriptPath: ./scripts/build.sh
 
-    args: '-target=RegisterUnity -UnitySerialNumber="$(UNITY_SERIAL_NUMBER_MACOS)" -UnityUsername="$(UNITY_USERNAME)" -UnityPassword="$(UNITY_PASSWORD)" -Verbosity="Diagnostic"'
-
-
-- task: tsuyoshiushio.shell-exec.shellexec.shellexec@0
+- script: |
+   echo After activating unity, some important .meta files are deleted, so they must be un-deleted
+   git config --global user.email "you@example.com"
+   git config --global user.name "Your Name"
+   git stash
   displayName: 'git stash'
-  inputs:
-    code: |
-     # After activating unity, some important .meta files are deleted, so they must be un-deleted
-     git stash
 
-- task: ShellScript@2
+- powershell: ./scripts/build.ps1
+  arguments: '-Target="DownloadNdk" -NdkUrl="$(ANDROID_NDK_URL)" -Verbosity="Diagnostic"'
+
   displayName: 'Download Android NDK'
+
+- task: PowerShell@1
+  displayName: 'Build Puppet Apps'
   inputs:
-    scriptPath: ./scripts/build.sh
+    scriptName: ./scripts/build.ps1
 
-    args: '-target=DownloadNdk -NdkUrl="$(ANDROID_NDK_URL)" -Verbosity="Diagnostic"'
-
-
-- task: ShellScript@2
-  displayName: 'Run Cake Target "BuildPuppetApps"'
-  inputs:
-    scriptPath: ./scripts/build.sh
-
-    args: '-target=BuildApp -UnityAppName="Puppet" -NuGetPassword="$(NUGET_PASSWORD)" -NuGetFeedId="$(NUGET_FEED_ID)" -Verbosity="Diagnostic"'
+    arguments: '-Target="BuildPuppetApps" -NuGetPassword="$(NUGET_PASSWORD)" -NuGetFeedId="$(NUGET_FEED_ID)" -Verbosity="Diagnostic"'
 
 
-- task: ShellScript@2
+- powershell: ./scripts/build.ps1
+  arguments: '-Target="UnregisterUnity" -Verbosity="Diagnostic"'
+
   displayName: 'Unregister Unity'
-  inputs:
-    scriptPath: ./scripts/build.sh
-
-    args: '-target=UnregisterUnity -Verbosity="Diagnostic"'
-
   condition: always()
+
