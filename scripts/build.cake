@@ -548,7 +548,9 @@ void VerifyAndroidAppsBuild(string type, string projectPath)
         {
             throw new Exception("No apk found in directory '" + outputDirectory + "'");
         }
-        Statics.Context.Information("Found apk: " + files[0].FullPath);
+        foreach (var file in files) {
+            Statics.Context.Information("Found apk: " + file.FullPath);
+        }
     }, extraArgs);
 }
 
