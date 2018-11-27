@@ -42,6 +42,6 @@ steps:
   displayName: 'Unregister Unity'
   inputs:
     scriptName: ./scripts/build.ps1
-  arguments: '-Target="UnregisterUnity" -Verbosity="Diagnostic"'=
+  arguments: '-Target="UnregisterUnity" -Verbosity="Diagnostic"'
   condition: always()
 
