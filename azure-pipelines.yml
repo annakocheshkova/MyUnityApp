@@ -1,0 +1,60 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+  
+steps:
+- task: ShellScript@2
+  displayName: 'Install Unity'
+  inputs:
+    scriptPath: 'scripts/install-unity.sh'
+
+
+- task: ShellScript@2
+  displayName: 'Activate Unity'
+  inputs:
+    scriptPath: ./build.sh
+
+    args: '-target=RegisterUnity -UnitySerialNumber="$(UNITY_SERIAL_NUMBER_MACOS)" -UnityUsername="$(UNITY_USERNAME)" -UnityPassword="$(UNITY_PASSWORD)" -Verbosity="Diagnostic"'
+
+
+- task: tsuyoshiushio.shell-exec.shellexec.shellexec@0
+  displayName: 'git stash'
+  inputs:
+    code: |
+     # After activating unity, some important .meta files are deleted, so they must be un-deleted
+     git stash
+
+- task: ShellScript@2
+  displayName: 'Download Android NDK'
+  inputs:
+    scriptPath: ./build.sh
+
+    args: '-target=DownloadNdk -NdkUrl="$(ANDROID_NDK_URL)" -Verbosity="Diagnostic"'
+
+
+- task: ShellScript@2
+  displayName: 'Run Cake Target "BuildPuppetApps"'
+  inputs:
+    scriptPath: ./build.sh
+
+    args: '-target=BuildApp -UnityAppName="Puppet" -NuGetPassword="$(NUGET_PASSWORD)" -NuGetFeedId="$(NUGET_FEED_ID)" -Verbosity="Diagnostic"'
+
+
+- task: ShellScript@2
+  displayName: 'Unregister Unity'
+  inputs:
+    scriptPath: ./build.sh
+
+    args: '-target=UnregisterUnity -Verbosity="Diagnostic"'
+
+  condition: always()
+
+
+
+
+
+- script: |
+    echo Add other tasks to build, test, and deploy your project.
+    echo See https://aka.ms/yaml
+  displayName: 'Run a multi-line script'
