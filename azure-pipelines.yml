@@ -32,7 +32,7 @@ steps:
 - task: PublishPipelineArtifact@0
   inputs:
     artifactName: 'MyArtifact'
-    targetPath: './CAKE_SCRIPT_TEMP$(UNITY_APP_NAME)Builds/AndroidMonoBuild.apk'
+    targetPath: './CAKE_SCRIPT_TEMP$(UNITY_APP_NAME)Builds/'
 
 - task: ShellScript@2
   displayName: 'Unregister Unity'
