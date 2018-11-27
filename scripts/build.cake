@@ -503,7 +503,7 @@ void BuildApps(string type = "", string projectPath = "..")
   //  }
     if (Statics.Context.IsRunningOnUnix())
     {
-        VerifyIosAppsBuild(type, projectPath);
+       //VerifyIosAppsBuild(type, projectPath);
         VerifyAndroidAppsBuild(type, projectPath);
     }
     else
@@ -542,12 +542,13 @@ void VerifyAndroidAppsBuild(string type, string projectPath)
     new string[] { "AndroidMono", "AndroidIl2CPP" },
     outputDirectory =>
     {
+        var files = Statics.Context.GetFiles(outputDirectory + "/*.apk");
         // Verify that an APK was generated.
-        if (Statics.Context.GetFiles(outputDirectory + "/*.apk").Count == 0)
+        if (files.Count == 0)
         {
             throw new Exception("No apk found in directory '" + outputDirectory + "'");
         }
-        Statics.Context.Information("Found apk.");
+        Statics.Context.Information("Found apk: " + files[0].FullPath);
     }, extraArgs);
 }
 
@@ -590,11 +591,11 @@ void VerifyAppsBuild(string type, string platformIdentifier, string projectPath,
         verificatonMethod(outputDirectory);
 
         // Remove all remaining builds.
-        Statics.Context.CleanDirectory(outputDirectory);
+        //Statics.Context.CleanDirectory(outputDirectory);
     }
 
     // Remove all remaining builds.
-    Statics.Context.CleanDirectory(outputDirectory);
+    //Statics.Context.CleanDirectory(outputDirectory);
 }
 
 Task("PublishPackagesToStorage").Does(()=>
