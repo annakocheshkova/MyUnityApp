@@ -74,10 +74,27 @@ Task("DownloadNdk")
 
 void BuildApps(string projectPath = "..")
 {
+    var buildTarget = Statics.Context.EnvironmentVariable("BUILD_TARGET");
+    var buildIOS = true;
+    var buildAndroid = true;
+    if (buildTarget == "Android") 
+    {
+        buildIOS = false;
+    }
+    if (buildTarget == "iOS") 
+    {
+        buildAndroid = false;
+    }
     if (Statics.Context.IsRunningOnUnix())
     {
-        VerifyIosAppsBuild(projectPath);
-        VerifyAndroidAppsBuild(projectPath);
+        if (buildIOS) 
+        {
+            VerifyIosAppsBuild(projectPath);
+        }
+        if (buildAndroid) 
+        {
+            VerifyAndroidAppsBuild(projectPath);
+        }
     }
     else
     {
