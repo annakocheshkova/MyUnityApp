@@ -114,10 +114,10 @@ public class BuildMyUnityApp
     private static void BuildMyUnityAppScene(BuildTarget target, BuildTargetGroup targetGroup, ScriptingImplementation scriptingImplementation, string outputPath)
     {
         PlayerSettings.SetScriptingBackend(targetGroup, scriptingImplementation);
-        string[] MyUnityAppScene = { System.Environment.GetEnvironmentVariable("UNITY_SCENE")  };
+        string scene = System.Environment.GetEnvironmentVariable("UNITY_SCENE");
         var options = new BuildPlayerOptions
         {
-            scenes = MyUnityAppScene,
+            scenes = scene == null ? new string[0] : new string[1]{ scene },
             options = BuildOptions.None,
             locationPathName = Path.Combine(BuildFolder, outputPath),
             target = target
