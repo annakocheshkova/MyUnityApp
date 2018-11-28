@@ -13,11 +13,15 @@ using System.Linq;
 public class BuildMyUnityApp
 {
     private static readonly string BuildFolder = "CAKE_SCRIPT_TEMPMyUnityAppBuilds";
-    private static readonly string AppIdentifier = "com.microsoft.appcenter.unity.MyUnityApp";
+    private static readonly string AppIdentifier = "com.myapp.mysampleapp";
 
     static BuildMyUnityApp()
     {
         var appIdentifier = System.Environment.GetEnvironmentVariable("APP_IDENTIFIER");
+        if (appIdentifier == null)
+        {
+            appIdentifier = AppIdentifier;
+        }
 #if UNITY_5_6_OR_NEWER
         PlayerSettings.applicationIdentifier = appIdentifier;
 #else

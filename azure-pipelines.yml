@@ -1,43 +1,43 @@
 steps:
-- task: PowerShell@1
+- task: ShellScript@2
   displayName: 'Install Unity'
   inputs:
-    scriptName: ./scripts/build.ps1
-    arguments: '-Target="Install-Unity-Windows" -Verbosity="Diagnostic"'
+    scriptPath: 'scripts/install-unity.sh'
 
-- task: PowerShell@1
+- task: ShellScript@2
   displayName: 'Activate Unity'
   inputs:
-    scriptName: ./scripts/build.ps1
-    arguments: '-Target="RegisterUnity" -UnitySerialNumber="$(UNITY_SERIAL_NUMBER)" -UnityUsername="$(UNITY_USERNAME)" -UnityPassword="$(UNITY_PASSWORD)" -Verbosity="Diagnostic"'
+    scriptPath: ./scripts/build.sh
+    args: '-target=RegisterUnity -UnitySerialNumber="$(UNITY_SERIAL_NUMBER)" -UnityUsername="$(UNITY_USERNAME)" -UnityPassword="$(UNITY_PASSWORD)" -Verbosity="Diagnostic"'
 
-- script: |
-   echo After activating unity, some important .meta files are deleted, so they must be un-deleted
-   git config --global user.email "you@example.com"
-   git config --global user.name "Your Name"
-   git stash
+- task: tsuyoshiushio.shell-exec.shellexec.shellexec@0
   displayName: 'git stash'
-
-- task: PowerShell@1
+  inputs:
+    code: |
+     # After activating unity, some important .meta files are deleted, so they must be un-deleted
+     git stash
+     
+- task: ShellScript@2
   displayName: 'Download Android NDK'
   inputs:
-    scriptName:  ./scripts/build.ps1
-    arguments: '-Target="DownloadNdk" -NdkUrl="$(ANDROID_NDK_URL)" -Verbosity="Diagnostic"'
+    scriptPath: ./scripts/build.sh
+    args: '-target=DownloadNdk -NdkUrl="$(ANDROID_NDK_URL)" -Verbosity="Diagnostic"'
 
-- task: PowerShell@1
-  displayName: 'Build Puppet Apps'
+- task: ShellScript@2
+  displayName: 'Run Cake Target "BuildApp"'
   inputs:
-    scriptName: ./scripts/build.ps1
-    arguments: '-Target="BuildApp" -Verbosity="Diagnostic"'
+    scriptPath: ./scripts/build.sh
+    args: '-target=BuildApp -Verbosity="Diagnostic"'
 
 - task: PublishPipelineArtifact@0
   inputs:
     artifactName: 'MyArtifact'
     targetPath: './CAKE_SCRIPT_TEMPMyUnityAppBuilds/'
-    
-- task: PowerShell@1
+
+- task: ShellScript@2
   displayName: 'Unregister Unity'
   inputs:
-    scriptName: ./scripts/build.ps1
-    arguments: '-Target="UnregisterUnity" -Verbosity="Diagnostic"'
+    scriptPath: ./scripts/build.sh
+    args: '-target=UnregisterUnity -Verbosity="Diagnostic"'
+
   condition: always()
