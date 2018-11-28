@@ -8,7 +8,7 @@ steps:
   displayName: 'Activate Unity'
   inputs:
     scriptPath: ./scripts/build.sh
-    args: '-target=RegisterUnity -UnitySerialNumber="$(UNITY_SERIAL_NUMBER_MACOS)" -UnityUsername="$(UNITY_USERNAME)" -UnityPassword="$(UNITY_PASSWORD)" -Verbosity="Diagnostic"'
+    args: '-target=RegisterUnity -UnitySerialNumber="$(UNITY_SERIAL_NUMBER)" -UnityUsername="$(UNITY_USERNAME)" -UnityPassword="$(UNITY_PASSWORD)" -Verbosity="Diagnostic"'
 
 - task: tsuyoshiushio.shell-exec.shellexec.shellexec@0
   displayName: 'git stash'
@@ -32,7 +32,7 @@ steps:
 - task: PublishPipelineArtifact@0
   inputs:
     artifactName: 'MyArtifact'
-    targetPath: './CAKE_SCRIPT_TEMP$(UNITY_APP_NAME)Builds/'
+    targetPath: './CAKE_SCRIPT_TEMPMyUnityAppBuilds/'
 
 - task: ShellScript@2
   displayName: 'Unregister Unity'
