@@ -121,7 +121,7 @@ public class BuildMyUnityApp
         string scene = System.Environment.GetEnvironmentVariable("UNITY_SCENE");
         var options = new BuildPlayerOptions
         {
-            scenes = scene == null ? new string[0] : new string[1]{ scene },
+            scenes = scene == null ? new string[0] : scene.Split(";"),
             options = BuildOptions.None,
             locationPathName = Path.Combine(BuildFolder, outputPath),
             target = target
