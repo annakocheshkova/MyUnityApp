@@ -76,7 +76,7 @@ void BuildApps(string projectPath = "..")
 {
     if (Statics.Context.IsRunningOnUnix())
     {
-       //VerifyIosAppsBuild(projectPath);
+        VerifyIosAppsBuild(projectPath);
         VerifyAndroidAppsBuild(projectPath);
     }
     else
