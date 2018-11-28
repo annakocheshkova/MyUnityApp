@@ -124,25 +124,4 @@ public class BuildMyUnityApp
         };
         BuildPipeline.BuildPlayer(options);
     }
-
-    // Increments build version for all platforms
-    public static void IncrementVersionNumber()
-    {
-        var currentVersion = PlayerSettings.bundleVersion;
-        Debug.Log("current version: " + currentVersion);
-        var minorVersion = int.Parse(currentVersion.Substring(currentVersion.LastIndexOf(".") + 1)) + 1;
-        var newVersion = currentVersion.Substring(0, currentVersion.LastIndexOf(".") + 1) + minorVersion;
-        Debug.Log("new version: " + newVersion);
-        PlayerSettings.bundleVersion = newVersion;
-        PlayerSettings.Android.bundleVersionCode++;
-    }
-
-    // Sets version number for MyUnityApp app
-    public static void SetVersionNumber()
-    {
-        var currentVersion = PlayerSettings.bundleVersion;
-        var MyUnityAppVersion = "1.0";
-        PlayerSettings.bundleVersion = MyUnityAppVersion;
-        PlayerSettings.Android.bundleVersionCode++;
-    }
 }

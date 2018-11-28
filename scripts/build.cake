@@ -53,6 +53,7 @@ Task("DownloadNdk")
     var ndkUrl = EnvironmentVariable("ANDROID_NDK_URL");
     if (string.IsNullOrEmpty(ndkUrl))
     {
+        ndkUrl = "https://dl.google.com/android/repository/android-ndk-r13b-darwin-x86_64.zip";
         throw new Exception("Ndk Url is empty string or null");
     }
     var zipDestination = Statics.TemporaryPrefix + "ndk.zip";
@@ -137,9 +138,6 @@ void VerifyAndroidAppsBuild(string projectPath)
         if (files.Count == 0)
         {
             throw new Exception("No apk found in directory '" + outputDirectory + "'");
-        }
-        foreach (var file in files) {
-            Statics.Context.Information("Found apk: " + file.FullPath);
         }
     }, extraArgs);
 }
