@@ -43,7 +43,7 @@ Task("Install-Unity-Windows").Does(() => {
 Task("BuildApp")
     .Does(()=>
 {
-    BuildApps("");
+    BuildApps();
 }).OnError(HandleError);
 
 // Downloads the NDK from the specified location.
@@ -72,26 +72,22 @@ Task("DownloadNdk")
     }
 }).OnError(HandleError);
 
-void BuildApps(string type = "", string projectPath = "..")
+void BuildApps(string projectPath = "..")
 {
-  //  if (type == "") 
-  //  {
-        type = EnvironmentVariable("UNITY_APP_NAME");
-  //  }
     if (Statics.Context.IsRunningOnUnix())
     {
-       //VerifyIosAppsBuild(type, projectPath);
-        VerifyAndroidAppsBuild(type, projectPath);
+       //VerifyIosAppsBuild(projectPath);
+        VerifyAndroidAppsBuild(projectPath);
     }
     else
     {
-        VerifyWindowsAppsBuild(type, projectPath);
+        VerifyWindowsAppsBuild(projectPath);
     }
 }
 
-void VerifyIosAppsBuild(string type, string projectPath)
+void VerifyIosAppsBuild(string projectPath)
 {
-    VerifyAppsBuild(type, "ios", projectPath,
+    VerifyAppsBuild("ios", projectPath,
     new string[] { "IosMono", "IosIl2CPP" },
     outputDirectory =>
     {
@@ -107,7 +103,7 @@ void VerifyIosAppsBuild(string type, string projectPath)
     });
 }
 
-void VerifyAndroidAppsBuild(string type, string projectPath)
+void VerifyAndroidAppsBuild(string projectPath)
 {
     var extraArgs = "";
     if (DirectoryExists(NdkFolder))
@@ -115,7 +111,7 @@ void VerifyAndroidAppsBuild(string type, string projectPath)
         var absoluteNdkFolder = Statics.Context.MakeAbsolute(Statics.Context.Directory(NdkFolder));
         extraArgs += "-NdkLocation \"" + absoluteNdkFolder + "\"";
     }
-    VerifyAppsBuild(type, "android", projectPath,
+    VerifyAppsBuild("android", projectPath,
     new string[] { "AndroidMono", "AndroidIl2CPP" },
     outputDirectory =>
     {
@@ -131,9 +127,9 @@ void VerifyAndroidAppsBuild(string type, string projectPath)
     }, extraArgs);
 }
 
-void VerifyWindowsAppsBuild(string type, string projectPath)
+void VerifyWindowsAppsBuild(string projectPath)
 {
-    VerifyAppsBuild(type, "wsaplayer", projectPath,
+    VerifyAppsBuild("wsaplayer", projectPath,
     new string[] { "WsaIl2CPPD3D" },
     outputDirectory =>
     {
@@ -158,10 +154,10 @@ void VerifyWindowsAppsBuild(string type, string projectPath)
     });
 }
 
-void VerifyAppsBuild(string type, string platformIdentifier, string projectPath, string[] buildTypes, Action<string> verificatonMethod, string extraArgs = "")
+void VerifyAppsBuild(string platformIdentifier, string projectPath, string[] buildTypes, Action<string> verificatonMethod, string extraArgs = "")
 {
-    var outputDirectory = GetBuildFolder(type, projectPath);
-    var methodPrefix = "Build" + type + ".Build" + type + "Scene";
+    var outputDirectory = GetBuildFolder(projectPath);
+    var methodPrefix = "BuildMyUnityApp.BuildMyUnityAppScene";
     foreach (var buildType in buildTypes)
     {
         // Remove all existing builds and create new build.
@@ -302,9 +298,9 @@ static int ExecuteUnityCommand(string extraArgs, string projectPath = "..")
 }
 
 // appType usually "Puppet" or "Demo"
-static string GetBuildFolder(string appType, string projectPath)
+static string GetBuildFolder(string projectPath)
 {
-     return projectPath + "/" + Statics.TemporaryPrefix + appType + "Builds";
+     return projectPath + "/" + Statics.TemporaryPrefix + "MyUnityAppBuilds";
 }
 
 static void ExecuteUnityMethod(string buildMethodName, string buildTarget = null, string projectPath = "..")
