@@ -54,7 +54,6 @@ Task("DownloadNdk")
     if (string.IsNullOrEmpty(ndkUrl))
     {
         ndkUrl = "https://dl.google.com/android/repository/android-ndk-r13b-darwin-x86_64.zip";
-        throw new Exception("Ndk Url is empty string or null");
     }
     var zipDestination = Statics.TemporaryPrefix + "ndk.zip";
     
